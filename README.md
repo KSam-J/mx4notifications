@@ -26,10 +26,10 @@ git clone https://github.com/lukasfri/mx4notifications.git
 cd mx4notifications
 ```
 
-2. Install dependencies using pdm:
+2. Install dependencies using uv:
 
 ```bash
-pdm install
+uv sync
 ```
 
 Or using pip:
@@ -45,7 +45,7 @@ pip install hid dbus-python pygobject
 Run the watcher to receive haptic feedback on notifications:
 
 ```bash
-pdm run python src/watch.py
+uv run python src/watch.py
 ```
 
 The script will:
@@ -63,12 +63,32 @@ Send a test notification to verify it's working:
 notify-send "Test Notification" "You should feel vibration on your mouse!"
 ```
 
+Send a one-shot haptic directly:
+
+```bash
+uv run python src/send_haptic.py
+```
+
+Send a specific haptic payload directly:
+
+```bash
+uv run python src/send_haptic.py --payload 7
+```
+
+Run interactive haptic discovery (default payload range `0-31`):
+
+```bash
+uv run python src/send_haptic.py --discover
+```
+
+The discovery flow sends each payload, asks what you felt (`short`, `long`, `double`, `none`, `other`), then writes JSON results to `./haptic_discovery_results.json` by default.
+
 ### Testing Haptic Patterns
 
 Explore different haptic feedback patterns:
 
 ```bash
-pdm run python src/mx_master_4.py
+uv run python src/mx_master_4.py
 ```
 
 This demo cycles through 15 different haptic patterns with 3-second intervals to help you find your preferred feedback style.
