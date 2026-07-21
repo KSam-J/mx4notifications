@@ -45,7 +45,7 @@ pip install hid dbus-python pygobject
 Run the watcher to receive haptic feedback on notifications:
 
 ```bash
-uv run python src/watch.py
+uv run mx4notifications watch
 ```
 
 The script will:
@@ -66,19 +66,19 @@ notify-send "Test Notification" "You should feel vibration on your mouse!"
 Send a one-shot haptic directly:
 
 ```bash
-uv run python src/send_haptic.py
+uv run mx4notifications-send-haptic
 ```
 
 Send a specific haptic payload directly:
 
 ```bash
-uv run python src/send_haptic.py --payload 7
+uv run mx4notifications-send-haptic --payload 7
 ```
 
 Run interactive haptic discovery (default payload range `0-31`):
 
 ```bash
-uv run python src/send_haptic.py --discover
+uv run mx4notifications-send-haptic --discover
 ```
 
 The discovery flow sends each payload, asks what you felt (`short`, `long`, `double`, `none`, `other`), then writes JSON results to `./haptic_discovery_results.json` by default.
@@ -88,10 +88,19 @@ The discovery flow sends each payload, asks what you felt (`short`, `long`, `dou
 Explore different haptic feedback patterns:
 
 ```bash
-uv run python src/mx_master_4.py
+uv run mx4notifications-haptic-morse "... --- ..."
 ```
 
-This demo cycles through 15 different haptic patterns with 3-second intervals to help you find your preferred feedback style.
+This command sends a Morse-like pattern so you can experiment with timed haptic sequences.
+
+### Library layout
+
+Reusable code now lives under `src/mx4notifications/`:
+
+- `mx4notifications.core.mx_master_4` for HID++ device access
+- `mx4notifications.cli.*` for watcher and utility command flows
+
+Compatibility wrappers are kept in `src/*.py` during the transition, and standalone launchers live in `scripts/` if you want direct script entry points.
 
 ## How It Works
 

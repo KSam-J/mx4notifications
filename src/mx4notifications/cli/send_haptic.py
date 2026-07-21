@@ -1,11 +1,10 @@
-#!/usr/bin/env -S uv run python
-
 import argparse
 import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from mx_master_4 import MXMaster4, FunctionID
+
+from ..core.mx_master_4 import FunctionID, MXMaster4
 
 LABEL_MAP = {
     "s": "short",
@@ -50,7 +49,6 @@ def parse_payloads(payload_spec: str) -> list[int]:
 
 
 def save_discovery_results(path: Path, payloads: list[int], results: list[dict]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "created_at": datetime.now(timezone.utc).isoformat(),
         "payloads_tested": payloads,
@@ -93,7 +91,7 @@ def send_haptic(payload: int = 0) -> bool:
             logging.info("✓ Haptic payload %d sent!", payload)
             return True
         except Exception as e:
-            logging.error(f"Failed to send haptic: {e}")
+            logging.error("Failed to send haptic: %s", e)
             return False
 
 
@@ -147,6 +145,7 @@ def discover_haptics(payloads: list[int], output_path: Path | None) -> bool:
         print(f"- payload {entry['payload']}: {entry['label']}{suffix}")
 
     if output_path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         save_discovery_results(output_path, completed_payloads, results)
         logging.info("Saved discovery results to %s", output_path)
 
@@ -219,6 +218,7 @@ def main() -> int:
         parser.error("--payload must be between 0 and 255")
 
     return 0 if send_haptic(args.payload) else 1
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

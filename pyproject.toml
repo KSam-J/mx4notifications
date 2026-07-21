@@ -1,6 +1,22 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "master4"
+name = "mx4notifications"
 version = "0.1.0"
-description = "Add your description here"
+description = "MX Master 4 notification haptics"
 requires-python = ">=3.12"
 dependencies = ["hid", "dbus-python>=1.4.0", "pygobject<=3.50.0"]
+
+[project.scripts]
+mx4notifications = "mx4notifications.cli.__main__:main"
+mx4notifications-watch = "mx4notifications.cli.watch:main"
+mx4notifications-send-haptic = "mx4notifications.cli.send_haptic:main"
+mx4notifications-haptic-morse = "mx4notifications.cli.haptic_morse:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

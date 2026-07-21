@@ -1,14 +1,14 @@
 import logging
 import subprocess
-import threading
-
-from mx_master_4 import FunctionID, MXMaster4
-from hid import HIDException
 from time import sleep
+
+from hid import HIDException
+
+from ..core.mx_master_4 import FunctionID, MXMaster4
 
 
 def monitor_notifications(device):
-    """Monitor D-Bus for notifications using dbus-monitor"""
+    """Monitor D-Bus for notifications using dbus-monitor."""
     cmd = [
         "dbus-monitor",
         "--session",
@@ -25,7 +25,6 @@ def monitor_notifications(device):
             line = line.strip()
             if line:
                 logging.debug("D-Bus: %s", line)
-                # When we see a Notify method call, trigger haptic
                 if "member=Notify" in line or "method call" in line.lower():
                     try:
                         device.hidpp(FunctionID.Haptic, 0)
@@ -33,7 +32,9 @@ def monitor_notifications(device):
                     except Exception as e:
                         if str(e) == "No such device":
                             raise
-                        logging.error("Failed to trigger haptic: %s\n%s", e,e.__class__.__name__)
+                        logging.error(
+                            "Failed to trigger haptic: %s\n%s", e, e.__class__.__name__
+                        )
     except (KeyboardInterrupt, HIDException):
         process.terminate()
         raise
@@ -42,7 +43,7 @@ def monitor_notifications(device):
 def main():
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
-    while 1:
+    while True:
         device = MXMaster4.find()
         if not device:
             logging.error("MX Master 4 not found!")
