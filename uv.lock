@@ -18,9 +18,9 @@ wheels = [
 ]
 
 [[package]]
-name = "master4"
+name = "mx4notifications"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "dbus-python" },
     { name = "hid" },
